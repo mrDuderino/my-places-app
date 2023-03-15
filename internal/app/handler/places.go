@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) createPlace(ctx *gin.Context) {
@@ -51,7 +52,25 @@ func (h *Handler) getAllPlaces(ctx *gin.Context) {
 }
 
 func (h *Handler) getPlaceByName(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	placeId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, "invalid place id")
+		return
+	}
+
+	var place models.Place
+	place, err = h.services.Place.GetById(userId, placeId)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, place)
 }
 
 func (h *Handler) updatePlace(ctx *gin.Context) {

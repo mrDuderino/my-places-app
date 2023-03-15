@@ -27,9 +27,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			places.POST("/", h.createPlace)
 			places.GET("/", h.getAllPlaces)
-			places.GET("/:name", h.getPlaceByName)
-			places.PUT("/:name", h.updatePlace)
-			places.DELETE("/:name", h.deletePlace)
+			places.GET("/:id", h.getPlaceByName)
+			places.PUT("/:id", h.updatePlace)
+			places.DELETE("/:id", h.deletePlace)
 		}
 	}
 	return router

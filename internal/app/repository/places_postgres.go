@@ -44,3 +44,11 @@ func (r *PlacesRepository) GetAllPlaces(userId int) ([]models.Place, error) {
 	err := r.db.Select(&places, query, userId)
 	return places, err
 }
+
+func (r *PlacesRepository) GetById(userId, placeId int) (models.Place, error) {
+	query := fmt.Sprintf(`SELECT p.id, p.name, p.description, p.address, p.rating FROM %s p 
+                            INNER JOIN %s up ON p.id = up.place_id WHERE up.user_id = $1 AND p.id = $2`, PlacesTable, UserPlacesTable)
+	var place models.Place
+	err := r.db.Get(&place, query, userId, placeId)
+	return place, err
+}

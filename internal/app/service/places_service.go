@@ -20,3 +20,7 @@ func (s *PlaceService) CreatePlace(userId int, place models.Place) (int, error) 
 func (s *PlaceService) GetAllPlaces(userId int) ([]models.Place, error) {
 	return s.repos.GetAllPlaces(userId)
 }
+
+func (s *PlaceService) GetById(userId, placeId int) (models.Place, error) {
+	return s.repos.GetById(userId, placeId)
+}

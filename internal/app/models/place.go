@@ -7,3 +7,9 @@ type Place struct {
 	Address     string `json:"address" db:"address"`
 	Rating      int    `json:"rating" db:"rating"`
 }
+
+type UserPlace struct {
+	Id      int
+	UserId  int `db:"user_id"`
+	PlaceId int `db:"place_id"`
+}
