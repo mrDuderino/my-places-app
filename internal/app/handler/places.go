@@ -28,8 +28,26 @@ func (h *Handler) createPlace(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, map[string]interface{}{"id": id})
 }
 
-func (h *Handler) getAllPlaces(ctx *gin.Context) {
+type getAllPLacesResponse struct {
+	Data []models.Place `json:"data"`
+}
 
+func (h *Handler) getAllPlaces(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
+
+	var places []models.Place
+	places, err = h.services.Place.GetAllPlaces(userId)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, getAllPLacesResponse{
+		Data: places,
+	})
 }
 
 func (h *Handler) getPlaceByName(ctx *gin.Context) {

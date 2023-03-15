@@ -16,3 +16,7 @@ func NewPlaceService(repos *repository.Repository) *PlaceService {
 func (s *PlaceService) CreatePlace(userId int, place models.Place) (int, error) {
 	return s.repos.CreatePlace(userId, place)
 }
+
+func (s *PlaceService) GetAllPlaces(userId int) ([]models.Place, error) {
+	return s.repos.GetAllPlaces(userId)
+}

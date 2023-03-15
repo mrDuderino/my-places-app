@@ -13,6 +13,7 @@ type Authorization interface {
 
 type Place interface {
 	CreatePlace(userId int, place models.Place) (int, error)
+	GetAllPlaces(userId int) ([]models.Place, error)
 }
 
 type Service struct {
