@@ -13,6 +13,7 @@ const (
 
 type Authorization interface {
 	CreateUser(user models.User) (int, error)
+	GetUser(username, password string) (models.User, error)
 }
 
 type Place interface {
