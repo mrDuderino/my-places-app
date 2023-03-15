@@ -22,6 +22,7 @@ type Place interface {
 	GetById(userId, placeId int) (models.Place, error)
 	GetByName(userId int, placeName string) (models.Place, error)
 	Delete(userId, placeId int) error
+	Update(userId int, placeId int, input models.UpdatePlaceInput) error
 }
 
 type Repository struct {

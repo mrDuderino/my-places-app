@@ -32,3 +32,10 @@ func (s *PlaceService) GetByName(userId int, placeName string) (models.Place, er
 func (s *PlaceService) Delete(userId, placeId int) error {
 	return s.repos.Delete(userId, placeId)
 }
+
+func (s *PlaceService) Update(userId int, placeId int, input models.UpdatePlaceInput) error {
+	if err := input.Validate(); err != nil {
+		return err
+	}
+	return s.repos.Update(userId, placeId, input)
+}

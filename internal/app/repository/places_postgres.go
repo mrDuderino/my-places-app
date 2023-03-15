@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
 	"log"
+	"strings"
 )
 
 type PlacesRepository struct {
@@ -69,5 +70,44 @@ func (r *PlacesRepository) Delete(userId, placeId int) error {
 	query := fmt.Sprintf("DELETE FROM %s p USING %s up WHERE p.id = up.place_id AND p.id = $1 AND up.user_id = $2",
 		PlacesTable, UserPlacesTable)
 	_, err := r.db.Exec(query, placeId, userId)
+	return err
+}
+
+func (r *PlacesRepository) Update(userId int, placeId int, input models.UpdatePlaceInput) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Name != nil {
+		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
+		args = append(args, *input.Name)
+		argId++
+	}
+
+	if input.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+		args = append(args, *input.Description)
+		argId++
+	}
+
+	if input.Address != nil {
+		setValues = append(setValues, fmt.Sprintf("address=$%d", argId))
+		args = append(args, *input.Address)
+		argId++
+	}
+
+	if input.Rating != nil {
+		setValues = append(setValues, fmt.Sprintf("rating=$%d", argId))
+		args = append(args, *input.Rating)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+	log.Println(setQuery)
+	query := fmt.Sprintf("UPDATE %s p SET %s FROM %s up WHERE p.id = up.place_id AND p.id = $%d AND up.user_id = $%d",
+		PlacesTable, setQuery, UserPlacesTable, argId, argId+1)
+
+	args = append(args, placeId, userId)
+	_, err := r.db.Exec(query, args...)
 	return err
 }
