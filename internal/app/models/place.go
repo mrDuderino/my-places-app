@@ -1,9 +1,9 @@
 package models
 
 type Place struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
-	Rating      int    `json:"rating"`
+	Id          int    `json:"id" db:"id"`
+	Name        string `json:"name" db:"name" binding:"required"`
+	Description string `json:"description" db:"description"`
+	Address     string `json:"address" db:"address"`
+	Rating      int    `json:"rating" db:"rating"`
 }

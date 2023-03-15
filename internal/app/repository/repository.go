@@ -17,6 +17,7 @@ type Authorization interface {
 }
 
 type Place interface {
+	CreatePlace(userId int, place models.Place) (int, error)
 }
 
 type Repository struct {
@@ -27,5 +28,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthRepository(db),
+		Place:         NewPlacesRepository(db),
 	}
 }
