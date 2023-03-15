@@ -51,7 +51,7 @@ func (h *Handler) getAllPlaces(ctx *gin.Context) {
 	})
 }
 
-func (h *Handler) getPlaceByName(ctx *gin.Context) {
+func (h *Handler) getPlaceById(ctx *gin.Context) {
 	userId, err := h.GetUserId(ctx)
 	if err != nil {
 		return
@@ -73,10 +73,47 @@ func (h *Handler) getPlaceByName(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, place)
 }
 
+func (h *Handler) getPlaceByName(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
+
+	placeName := ctx.Param("name")
+
+	var place models.Place
+	place, err = h.services.Place.GetByName(userId, placeName)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, place)
+}
+
 func (h *Handler) updatePlace(ctx *gin.Context) {
 
 }
 
 func (h *Handler) deletePlace(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	placeId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, "invalid place id")
+		return
+	}
+
+	err = h.services.Place.Delete(userId, placeId)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, StatusResponse{
+		Status: "ok",
+	})
 }

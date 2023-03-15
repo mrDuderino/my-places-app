@@ -15,6 +15,8 @@ type Place interface {
 	CreatePlace(userId int, place models.Place) (int, error)
 	GetAllPlaces(userId int) ([]models.Place, error)
 	GetById(userId, placeId int) (models.Place, error)
+	GetByName(userId int, placeName string) (models.Place, error)
+	Delete(userId, placeId int) error
 }
 
 type Service struct {

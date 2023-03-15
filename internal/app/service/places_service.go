@@ -24,3 +24,11 @@ func (s *PlaceService) GetAllPlaces(userId int) ([]models.Place, error) {
 func (s *PlaceService) GetById(userId, placeId int) (models.Place, error) {
 	return s.repos.GetById(userId, placeId)
 }
+
+func (s *PlaceService) GetByName(userId int, placeName string) (models.Place, error) {
+	return s.repos.GetByName(userId, placeName)
+}
+
+func (s *PlaceService) Delete(userId, placeId int) error {
+	return s.repos.Delete(userId, placeId)
+}

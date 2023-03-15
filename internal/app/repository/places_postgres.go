@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
+	"log"
 )
 
 type PlacesRepository struct {
@@ -51,4 +52,22 @@ func (r *PlacesRepository) GetById(userId, placeId int) (models.Place, error) {
 	var place models.Place
 	err := r.db.Get(&place, query, userId, placeId)
 	return place, err
+}
+
+func (r *PlacesRepository) GetByName(userId int, placeName string) (models.Place, error) {
+	query := fmt.Sprintf("SELECT id FROM %s WHERE name = $1", PlacesTable)
+	var placeId int
+	err := r.db.Get(&placeId, query, placeName)
+	if err != nil {
+		log.Println("GetByName: placeId =", placeId)
+	}
+
+	return r.GetById(userId, placeId)
+}
+
+func (r *PlacesRepository) Delete(userId, placeId int) error {
+	query := fmt.Sprintf("DELETE FROM %s p USING %s up WHERE p.id = up.place_id AND p.id = $1 AND up.user_id = $2",
+		PlacesTable, UserPlacesTable)
+	_, err := r.db.Exec(query, placeId, userId)
+	return err
 }
