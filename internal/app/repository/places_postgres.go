@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
-	"log"
+	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -60,7 +60,7 @@ func (r *PlacesRepository) GetByName(userId int, placeName string) (models.Place
 	var placeId int
 	err := r.db.Get(&placeId, query, placeName)
 	if err != nil {
-		log.Println("GetByName: placeId =", placeId)
+		logrus.Warningf("error getting place id from place name for name=%s", placeName)
 	}
 
 	return r.GetById(userId, placeId)
@@ -103,7 +103,6 @@ func (r *PlacesRepository) Update(userId int, placeId int, input models.UpdatePl
 	}
 
 	setQuery := strings.Join(setValues, ", ")
-	log.Println(setQuery)
 	query := fmt.Sprintf("UPDATE %s p SET %s FROM %s up WHERE p.id = up.place_id AND p.id = $%d AND up.user_id = $%d",
 		PlacesTable, setQuery, UserPlacesTable, argId, argId+1)
 

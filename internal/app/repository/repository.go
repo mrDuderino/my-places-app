@@ -5,12 +5,6 @@ import (
 	"github.com/mrDuderino/my-places-app/internal/app/models"
 )
 
-const (
-	UsersTable      = "users"
-	PlacesTable     = "places"
-	UserPlacesTable = "user_places"
-)
-
 type Authorization interface {
 	CreateUser(user models.User) (int, error)
 	GetUser(username, password string) (models.User, error)

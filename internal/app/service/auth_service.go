@@ -7,7 +7,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
 	"github.com/mrDuderino/my-places-app/internal/app/repository"
-	"log"
 	"os"
 	"time"
 )
@@ -44,7 +43,6 @@ type tokenClaims struct {
 func (s *AuthService) GenerateToken(username, password string) (string, error) {
 	user, err := s.repo.GetUser(username, s.generatePasswordHash(password))
 	if err != nil {
-		log.Println(err)
 		return "", err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tokenClaims{
@@ -73,6 +71,6 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	if !ok {
 		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
-	
+
 	return claims.UserId, nil
 }

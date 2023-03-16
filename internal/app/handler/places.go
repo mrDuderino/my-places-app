@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -110,7 +109,6 @@ func (h *Handler) updatePlace(ctx *gin.Context) {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
-	log.Printf("%#+v", input)
 
 	err = h.services.Place.Update(userId, placeId, input)
 	if err != nil {
