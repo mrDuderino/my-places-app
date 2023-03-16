@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/joho/godotenv"
 	"github.com/mrDuderino/my-places-app/internal/app/handler"
@@ -9,7 +10,10 @@ import (
 	"github.com/mrDuderino/my-places-app/internal/pkg/server"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -39,8 +43,24 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(server.Server)
-	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		logrus.Fatalf("error on runnning http server: %s", err.Error())
+	go func() {
+		err := srv.Run(viper.GetString("port"), handlers.InitRoutes())
+		if err != nil && err != http.ErrServerClosed {
+			logrus.Fatalf("error on runnning http server: %s", err.Error())
+		}
+	}()
+	logrus.Infoln("my-places-app http server started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	logrus.Infoln("my-places-app http server is shutting down")
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Errorf("error on server shutting down: %s", err.Error())
+	}
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error on db connection closing: %s", err.Error())
 	}
 }
 
