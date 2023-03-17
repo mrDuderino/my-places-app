@@ -1,4 +1,4 @@
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
     id serial not null unique,
     name varchar(255) not null,
@@ -6,7 +6,7 @@ CREATE TABLE users
     password_hash varchar(255) not null
 );
 
-CREATE TABLE places
+CREATE TABLE IF NOT EXISTS places
 (
     id serial not null unique,
     name varchar(255) not null,
@@ -15,7 +15,7 @@ CREATE TABLE places
     rating decimal
 );
 
-CREATE TABLE user_places
+CREATE TABLE IF NOT EXISTS user_places
 (
     id serial not null unique,
     user_id int references users (id) on delete cascade not null,
