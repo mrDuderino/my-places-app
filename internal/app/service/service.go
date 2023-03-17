@@ -20,14 +20,20 @@ type Place interface {
 	Update(userId int, placeId int, input models.UpdatePlaceInput) error
 }
 
+type Dish interface {
+	CreateDish(userId int, placeId int, dish models.Dish) (int, error)
+}
+
 type Service struct {
 	Authorization
 	Place
+	Dish
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Authorization: NewAuthService(repos),
-		Place:         NewPlaceService(repos),
+		Authorization: NewAuthService(repos.Authorization),
+		Place:         NewPlaceService(repos.Place),
+		Dish:          NewDishService(repos.Dish, repos.Place),
 	}
 }

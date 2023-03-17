@@ -6,9 +6,11 @@ import (
 )
 
 const (
-	UsersTable      = "users"
-	PlacesTable     = "places"
-	UserPlacesTable = "user_places"
+	UsersTable       = "users"
+	PlacesTable      = "places"
+	UserPlacesTable  = "user_places"
+	DishesTable      = "dishes"
+	PlaceDishesTable = "place_dishes"
 )
 
 type Config struct {

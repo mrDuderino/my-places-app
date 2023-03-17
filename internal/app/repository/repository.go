@@ -19,14 +19,20 @@ type Place interface {
 	Update(userId int, placeId int, input models.UpdatePlaceInput) error
 }
 
+type Dish interface {
+	CreateDish(placeId int, dish models.Dish) (int, error)
+}
+
 type Repository struct {
 	Authorization
 	Place
+	Dish
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthRepository(db),
 		Place:         NewPlacesRepository(db),
+		Dish:          NewDishRepository(db),
 	}
 }
