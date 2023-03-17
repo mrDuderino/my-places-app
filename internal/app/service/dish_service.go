@@ -24,3 +24,11 @@ func (s *DishService) CreateDish(userId int, placeId int, dish models.Dish) (int
 	}
 	return s.repos.CreateDish(placeId, dish)
 }
+
+func (s *DishService) GetAllDishes(userId, placeId int) ([]models.Dish, error) {
+	_, err := s.placeRepo.GetById(userId, placeId)
+	if err != nil {
+		return nil, err
+	}
+	return s.repos.GetAllDishes(userId, placeId)
+}

@@ -36,3 +36,14 @@ func (r *DishRepository) CreateDish(placeId int, dish models.Dish) (int, error) 
 	}
 	return id, tx.Commit()
 }
+
+func (r *DishRepository) GetAllDishes(userId, placeId int) ([]models.Dish, error) {
+	query := fmt.Sprintf(`SELECT di.id, di.name, di.description, di.rating FROM %s di 
+                                INNER JOIN %s pd ON di.id = pd.dish_id 
+    							INNER JOIN %s up ON pd.place_id = up.place_id 
+                                WHERE up.user_id = $1 AND pd.place_id = $2`,
+		DishesTable, PlaceDishesTable, UserPlacesTable)
+	var dishes []models.Dish
+	err := r.db.Select(&dishes, query, userId, placeId)
+	return dishes, err
+}
