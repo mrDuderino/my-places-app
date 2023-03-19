@@ -66,3 +66,11 @@ func (r *DishRepository) GetByName(userId int, dishName string) (models.Dish, er
 
 	return r.GetById(userId, dishId)
 }
+
+func (r *DishRepository) Delete(userId, dishId int) error {
+	query := fmt.Sprintf(`DELETE FROM %s di USING %s pd, %s up
+		WHERE di.id=pd.dish_id AND pd.place_id=up.place_id AND up.user_id=$1 AND di.id=$2`,
+		DishesTable, PlaceDishesTable, UserPlacesTable)
+	_, err := r.db.Exec(query, userId, dishId)
+	return err
+}

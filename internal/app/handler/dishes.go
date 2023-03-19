@@ -101,5 +101,21 @@ func (h *Handler) updateDish(ctx *gin.Context) {
 }
 
 func (h *Handler) deleteDish(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	dishId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, "invalid dish id")
+		return
+	}
+
+	err = h.services.Dish.Delete(userId, dishId)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+	}
+
+	ctx.JSON(http.StatusOK, StatusResponse{Status: "ok"})
 }

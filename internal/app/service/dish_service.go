@@ -40,3 +40,7 @@ func (s *DishService) GetById(userId, dishId int) (models.Dish, error) {
 func (s *DishService) GetByName(userId int, dishName string) (models.Dish, error) {
 	return s.repos.GetByName(userId, dishName)
 }
+
+func (s *DishService) Delete(userId, dishId int) error {
+	return s.repos.Delete(userId, dishId)
+}

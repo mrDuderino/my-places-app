@@ -25,6 +25,7 @@ type Dish interface {
 	GetAllDishes(userId, placeId int) ([]models.Dish, error)
 	GetById(userId, placeId int) (models.Dish, error)
 	GetByName(userId int, dishName string) (models.Dish, error)
+	Delete(userId, dishId int) error
 }
 
 type Service struct {
