@@ -25,6 +25,7 @@ type Dish interface {
 	GetById(userId, dishId int) (models.Dish, error)
 	GetByName(userId int, dishName string) (models.Dish, error)
 	Delete(userId, dishId int) error
+	Update(userId int, dishId int, input models.UpdateDishInput) error
 }
 
 type Repository struct {

@@ -44,3 +44,10 @@ func (s *DishService) GetByName(userId int, dishName string) (models.Dish, error
 func (s *DishService) Delete(userId, dishId int) error {
 	return s.repos.Delete(userId, dishId)
 }
+
+func (s *DishService) Update(userId int, dishId int, input models.UpdateDishInput) error {
+	if err := input.Validate(); err != nil {
+		return err
+	}
+	return s.repos.Update(userId, dishId, input)
+}

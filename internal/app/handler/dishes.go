@@ -97,7 +97,31 @@ func (h *Handler) getDishByName(ctx *gin.Context) {
 }
 
 func (h *Handler) updateDish(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	dishId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, "invalid dish id")
+		return
+	}
+
+	var input models.UpdateDishInput
+	err = ctx.BindJSON(&input)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = h.services.Dish.Update(userId, dishId, input)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, StatusResponse{Status: "ok"})
 }
 
 func (h *Handler) deleteDish(ctx *gin.Context) {
@@ -115,6 +139,7 @@ func (h *Handler) deleteDish(ctx *gin.Context) {
 	err = h.services.Dish.Delete(userId, dishId)
 	if err != nil {
 		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	ctx.JSON(http.StatusOK, StatusResponse{Status: "ok"})
