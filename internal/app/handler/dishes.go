@@ -57,7 +57,25 @@ func (h *Handler) getAllPlaceDishes(ctx *gin.Context) {
 }
 
 func (h *Handler) getDishById(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	dishId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, "invalid dish id")
+		return
+	}
+
+	var dish models.Dish
+	dish, err = h.services.Dish.GetById(userId, dishId)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dish)
 }
 
 func (h *Handler) getDishByName(ctx *gin.Context) {

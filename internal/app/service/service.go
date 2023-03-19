@@ -23,6 +23,7 @@ type Place interface {
 type Dish interface {
 	CreateDish(userId int, placeId int, dish models.Dish) (int, error)
 	GetAllDishes(userId, placeId int) ([]models.Dish, error)
+	GetById(userId, placeId int) (models.Dish, error)
 }
 
 type Service struct {
