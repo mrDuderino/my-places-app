@@ -36,3 +36,7 @@ func (s *DishService) GetAllDishes(userId, placeId int) ([]models.Dish, error) {
 func (s *DishService) GetById(userId, dishId int) (models.Dish, error) {
 	return s.repos.GetById(userId, dishId)
 }
+
+func (s *DishService) GetByName(userId int, dishName string) (models.Dish, error) {
+	return s.repos.GetByName(userId, dishName)
+}

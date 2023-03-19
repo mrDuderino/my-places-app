@@ -79,7 +79,21 @@ func (h *Handler) getDishById(ctx *gin.Context) {
 }
 
 func (h *Handler) getDishByName(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	dishName := ctx.Param("name")
+
+	var dish models.Dish
+	dish, err = h.services.Dish.GetByName(userId, dishName)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dish)
 }
 
 func (h *Handler) updateDish(ctx *gin.Context) {

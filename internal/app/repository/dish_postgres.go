@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
+	"github.com/sirupsen/logrus"
 )
 
 type DishRepository struct {
@@ -53,4 +54,15 @@ func (r *DishRepository) GetById(userId, dishId int) (models.Dish, error) {
 	var dish models.Dish
 	err := r.db.Get(&dish, query, dishId, userId)
 	return dish, err
+}
+
+func (r *DishRepository) GetByName(userId int, dishName string) (models.Dish, error) {
+	query := fmt.Sprintf("SELECT id FROM %s WHERE name=$1", DishesTable)
+	var dishId int
+	err := r.db.Get(&dishId, query, dishName)
+	if err != nil {
+		logrus.Warningf("error getting place id from place name for name=%s", dishName)
+	}
+
+	return r.GetById(userId, dishId)
 }
