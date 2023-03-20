@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/mrDuderino/my-places-app/internal/app/models"
 	"github.com/mrDuderino/my-places-app/internal/app/repository"
+	"github.com/sirupsen/logrus"
 )
 
 type DishService struct {
@@ -20,6 +21,7 @@ func NewDishService(repos repository.Dish, placeRepo repository.Place) *DishServ
 func (s *DishService) CreateDish(userId int, placeId int, dish models.Dish) (int, error) {
 	_, err := s.placeRepo.GetById(userId, placeId)
 	if err != nil {
+		logrus.Debugf("place with id=%d does not exist or does not belong to user: %s", placeId, err.Error())
 		return 0, err
 	}
 	return s.repos.CreateDish(placeId, dish)

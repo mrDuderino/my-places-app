@@ -29,10 +29,16 @@ type Dish interface {
 	Update(userId int, dishId int, input models.UpdateDishInput) error
 }
 
+type DiscountCard interface {
+	CreateDiscountCard(userId int, placeId int, card models.DiscountCard) (int, error)
+	GetAllDiscountCards(userId, placeId int) ([]models.DiscountCard, error)
+}
+
 type Service struct {
 	Authorization
 	Place
 	Dish
+	DiscountCard
 }
 
 func NewService(repos *repository.Repository) *Service {
@@ -40,5 +46,6 @@ func NewService(repos *repository.Repository) *Service {
 		Authorization: NewAuthService(repos.Authorization),
 		Place:         NewPlaceService(repos.Place),
 		Dish:          NewDishService(repos.Dish, repos.Place),
+		DiscountCard:  NewDiscountCardService(repos.DiscountCard, repos.Place),
 	}
 }

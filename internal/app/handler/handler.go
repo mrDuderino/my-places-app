@@ -37,6 +37,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				dishes.POST("/", h.createDish)
 				dishes.GET("/", h.getAllPlaceDishes)
 			}
+
+			discounts := places.Group(":id/discounts")
+			{
+				discounts.POST("/", h.createDiscountCard)
+				discounts.GET("/", h.getAllDiscountCards)
+			}
 		}
 
 		dishes := api.Group("/dishes")
@@ -46,6 +52,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			dishes.PUT("/:id", h.updateDish)
 			dishes.DELETE("/:id", h.deleteDish)
 		}
+
+		discounts := api.Group("/discounts")
+		{
+			discounts.GET("/:id", h.getDiscountCardById)
+			discounts.PUT("/:id", h.updateDiscountCard)
+			discounts.DELETE("/:id", h.deleteDiscountCard)
+		}
 	}
+	
 	return router
 }

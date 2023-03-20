@@ -49,7 +49,7 @@ func (r *DishRepository) GetAllDishes(userId, placeId int) ([]models.Dish, error
 }
 
 func (r *DishRepository) GetById(userId, dishId int) (models.Dish, error) {
-	query := fmt.Sprintf(`SELECT di.id, di.name, di.description, di.rating FROM %s di INNER JOIN %s pd ON p.id=pd.dish_id 
+	query := fmt.Sprintf(`SELECT di.id, di.name, di.description, di.rating FROM %s di INNER JOIN %s pd ON di.id=pd.dish_id 
     INNER JOIN %s up ON pd.place_id=up.place_id WHERE di.id=$1 AND up.user_id=$2`,
 		DishesTable, PlaceDishesTable, UserPlacesTable)
 	var dish models.Dish
@@ -105,6 +105,6 @@ func (r *DishRepository) Update(userId int, dishId int, input models.UpdateDishI
 		DishesTable, setQuery, PlaceDishesTable, UserPlacesTable, argId, argId+1)
 
 	args = append(args, userId, dishId)
-	_, err := r.db.Exec(query, args)
+	_, err := r.db.Exec(query, args...)
 	return err
 }

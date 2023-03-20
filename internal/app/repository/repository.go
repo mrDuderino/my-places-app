@@ -28,10 +28,16 @@ type Dish interface {
 	Update(userId int, dishId int, input models.UpdateDishInput) error
 }
 
+type DiscountCard interface {
+	CreateDiscountCard(placeId int, card models.DiscountCard) (int, error)
+	GetAllDiscountCards(userId, placeId int) ([]models.DiscountCard, error)
+}
+
 type Repository struct {
 	Authorization
 	Place
 	Dish
+	DiscountCard
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
@@ -39,5 +45,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		Authorization: NewAuthRepository(db),
 		Place:         NewPlacesRepository(db),
 		Dish:          NewDishRepository(db),
+		DiscountCard:  NewDiscountCardRepository(db),
 	}
 }
