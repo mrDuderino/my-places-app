@@ -33,6 +33,7 @@ type DiscountCard interface {
 	GetAllDiscountCards(userId, placeId int) ([]models.DiscountCard, error)
 	GetById(userId, discountId int) (models.DiscountCard, error)
 	Delete(userId, discountId int) error
+	Update(userId int, discountId int, input models.UpdateDiscountCardInput) error
 }
 
 type Repository struct {

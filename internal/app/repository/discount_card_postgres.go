@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/mrDuderino/my-places-app/internal/app/models"
+	"strings"
 )
 
 type DiscountCardRepository struct {
@@ -66,6 +67,45 @@ func (r *DiscountCardRepository) Delete(userId, discountId int) error {
        	WHERE dc.id=pd.discount_card_id AND pd.place_id=up.place_id AND up.user_id=$1 AND dc.id=$2`,
 		DiscountCardsTable, PlaceDiscountCardsTable, UserPlacesTable)
 	_, err := r.db.Exec(query, userId, discountId)
+
+	return err
+}
+
+func (r *DiscountCardRepository) Update(userId int, discountId int, input models.UpdateDiscountCardInput) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Number != nil {
+		setValues = append(setValues, fmt.Sprintf("number=$%d", argId))
+		args = append(args, *input.Number)
+		argId++
+	}
+
+	if input.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+		args = append(args, *input.Description)
+		argId++
+	}
+
+	if input.ValidFrom != nil {
+		setValues = append(setValues, fmt.Sprintf("valid_from=$%d", argId))
+		args = append(args, *input.ValidFrom)
+		argId++
+	}
+
+	if input.ValidTo != nil {
+		setValues = append(setValues, fmt.Sprintf("valid_to=$%d", argId))
+		args = append(args, *input.ValidTo)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+	query := fmt.Sprintf(`UPDATE %s dc SET %s FROM %s pd, %s up 
+       	WHERE dc.id=pd.discount_card_id AND pd.place_id=up.place_id AND up.user_id=$%d AND dc.id=$%d`,
+		DiscountCardsTable, setQuery, PlaceDiscountCardsTable, UserPlacesTable, argId, argId+1)
+	args = append(args, userId, discountId)
+	_, err := r.db.Exec(query, args...)
 
 	return err
 }

@@ -38,3 +38,10 @@ func (s *DiscountCardService) GetById(userId, discountId int) (models.DiscountCa
 func (s *DiscountCardService) Delete(userId, discountId int) error {
 	return s.repos.Delete(userId, discountId)
 }
+
+func (s *DiscountCardService) Update(userId int, discountId int, input models.UpdateDiscountCardInput) error {
+	if err := input.Validate(); err != nil {
+		return err
+	}
+	return s.repos.Update(userId, discountId, input)
+}

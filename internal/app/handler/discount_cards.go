@@ -79,7 +79,31 @@ func (h *Handler) getDiscountCardById(ctx *gin.Context) {
 }
 
 func (h *Handler) updateDiscountCard(ctx *gin.Context) {
+	userId, err := h.GetUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	discountId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return
+	}
+
+	var input models.UpdateDiscountCardInput
+	err = ctx.BindJSON(&input)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	err = h.services.DiscountCard.Update(userId, discountId, input)
+	if err != nil {
+		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, StatusResponse{
+		Status: "ok",
+	})
 }
 
 func (h *Handler) deleteDiscountCard(ctx *gin.Context) {
