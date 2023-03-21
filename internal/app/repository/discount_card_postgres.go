@@ -20,8 +20,8 @@ func (r *DiscountCardRepository) CreateDiscountCard(placeId int, card models.Dis
 		return 0, err
 	}
 
-	query := fmt.Sprintf("INSERT INTO %s (number, description, valid_from, valid_to) VALUES ($1, $2, $3, $4) RETURNING id",
-		DiscountCardsTable)
+	query := fmt.Sprintf(`INSERT INTO %s (number, description, valid_from, valid_to) 
+		VALUES ($1, $2, $3, $4) RETURNING id`, DiscountCardsTable)
 	row := tx.QueryRow(query, card.Number, card.Description, card.ValidFrom, card.ValidTo)
 
 	var cardId int
@@ -41,10 +41,31 @@ func (r *DiscountCardRepository) CreateDiscountCard(placeId int, card models.Dis
 
 func (r *DiscountCardRepository) GetAllDiscountCards(userId, placeId int) ([]models.DiscountCard, error) {
 	query := fmt.Sprintf(`SELECT dc.id, dc.number, dc.description, dc.valid_from, dc.valid_to FROM %s dc 
-    INNER JOIN %s pd ON dc.id=pd.discount_card_id INNER JOIN %s up ON pd.place_id=up.place_id WHERE up.user_id=$1 AND pd.place_id=$2`,
+    	INNER JOIN %s pd ON dc.id=pd.discount_card_id INNER JOIN %s up ON pd.place_id=up.place_id WHERE up.user_id=$1 AND pd.place_id=$2`,
 		DiscountCardsTable, PlaceDiscountCardsTable, UserPlacesTable)
 
 	var cards []models.DiscountCard
 	err := r.db.Select(&cards, query, userId, placeId)
+
 	return cards, err
+}
+
+func (r *DiscountCardRepository) GetById(userId, discountId int) (models.DiscountCard, error) {
+	query := fmt.Sprintf(`SELECT dc.id, dc.number, dc.description, dc.valid_from, dc.valid_to FROM %s dc 
+    	INNER JOIN %s pd ON dc.id=pd.discount_card_id INNER JOIN %s up ON pd.place_id=up.place_id WHERE up.user_id=$1 AND dc.id=$2`,
+		DiscountCardsTable, PlaceDiscountCardsTable, UserPlacesTable)
+
+	var card models.DiscountCard
+	err := r.db.Get(&card, query, userId, discountId)
+
+	return card, err
+}
+
+func (r *DiscountCardRepository) Delete(userId, discountId int) error {
+	query := fmt.Sprintf(`DELETE FROM %s dc USING %s pd, %s up 
+       	WHERE dc.id=pd.discount_card_id AND pd.place_id=up.place_id AND up.user_id=$1 AND dc.id=$2`,
+		DiscountCardsTable, PlaceDiscountCardsTable, UserPlacesTable)
+	_, err := r.db.Exec(query, userId, discountId)
+
+	return err
 }

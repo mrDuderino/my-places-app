@@ -30,3 +30,11 @@ func (s *DiscountCardService) CreateDiscountCard(userId int, placeId int, card m
 func (s *DiscountCardService) GetAllDiscountCards(userId, placeId int) ([]models.DiscountCard, error) {
 	return s.repos.GetAllDiscountCards(userId, placeId)
 }
+
+func (s *DiscountCardService) GetById(userId, discountId int) (models.DiscountCard, error) {
+	return s.repos.GetById(userId, discountId)
+}
+
+func (s *DiscountCardService) Delete(userId, discountId int) error {
+	return s.repos.Delete(userId, discountId)
+}

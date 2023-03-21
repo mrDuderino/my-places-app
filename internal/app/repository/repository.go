@@ -31,6 +31,8 @@ type Dish interface {
 type DiscountCard interface {
 	CreateDiscountCard(placeId int, card models.DiscountCard) (int, error)
 	GetAllDiscountCards(userId, placeId int) ([]models.DiscountCard, error)
+	GetById(userId, discountId int) (models.DiscountCard, error)
+	Delete(userId, discountId int) error
 }
 
 type Repository struct {
