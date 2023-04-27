@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+
+  my-places-api:
+    build:
+      context: .
+      dockerfile: ./my-places-api.dockerfile
+    restart: always
+    ports:
+      - "8085:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      SALT: "sh5lkqx4m0k8b1p2bbnbv3ncdl4"
+      SIGNING_KEY: "nvie723hf2pfn0pwld23jfs93a"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "qwertysha"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_NAME: "placesdb"
+      SSL_MODE: "disable"
+
+  postgres:
+    image: 'postgres'
+    container_name: my-places-db
+    ports:
+      - "5433:5432"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwertysha
+      POSTGRES_DB: placesdb
+    volumes:
+      - ./db-data/postgres/:/var/lib/postgresql/data/
