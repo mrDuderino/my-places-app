@@ -23,7 +23,7 @@ down:
 ## build_broker: builds the broker binary as a linux executable
 build_api:
 	@echo "Building api binary..."
-	env GOOS=linux CGO_ENABLED=0 go build -o ${API_BINARY} ./cmd/my-places-api
+	env GOOS=linux CGO_ENABLED=0 go build -o build/${API_BINARY} ./cmd/my-places-api
 	@echo "Done!"
 
 .PHONY: migrate-create migrate-up migrate-down connect-db
@@ -32,10 +32,10 @@ migrate-create:
 	migrate create -ext sql -dir ./schema -seq init
 
 migrate-up:
-	migrate -path ./schema -database 'postgres://postgres:qwertysha@localhost:5433/postgres?sslmode=disable' -verbose up
+	migrate -path ./schema -database 'postgres://postgres:qwertysha@localhost:5432/postgres?sslmode=disable' -verbose up
 
 migrate-down:
-	migrate -path ./schema -database 'postgres://postgres:qwertysha@localhost:5433/postgres?sslmode=disable' -verbose down
+	migrate -path ./schema -database 'postgres://postgres:qwertysha@localhost:5432/postgres?sslmode=disable' -verbose down
 
 connect:
 	docker exec -it my-places-db /bin/bash

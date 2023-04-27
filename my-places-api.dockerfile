@@ -2,7 +2,6 @@ FROM alpine:latest
 
 RUN mkdir /app
 
-COPY myPlacesApp /app
-COPY configs /app/configs
+COPY build/myPlacesApp /app
 
 CMD [ "/app/myPlacesApp" ]

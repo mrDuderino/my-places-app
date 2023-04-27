@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	UsersTable              = "users"
+	UsersTable              = "public.users"
 	PlacesTable             = "places"
 	UserPlacesTable         = "user_places"
 	DishesTable             = "dishes"
