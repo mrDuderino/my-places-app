@@ -19,7 +19,7 @@ services:
       DB_PASSWORD: "qwertysha"
       DB_HOST: "postgres"
       DB_PORT: "5432"
-      DB_NAME: "placesdb"
+      DB_NAME: "postgres"
       SSL_MODE: "disable"
 
   postgres:
@@ -34,6 +34,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: qwertysha
-      POSTGRES_DB: placesdb
+      POSTGRES_DB: postgres
     volumes:
       - ./db-data/postgres/:/var/lib/postgresql/data/
